@@ -52,6 +52,11 @@ public abstract class AbstractProcessingStep implements BaseProcessor.Processing
         }
     }
 
+
+    protected void tryWriteSource(JavaFile sourceFile) throws IOException {
+        sourceFile.writeTo(filer);
+    }
+
     protected void writeSource(List<TypeSpec.Builder> builders, String rootPackage) {
         builders.forEach(builder -> {
             JavaFile javaFile = JavaFile.builder(rootPackage, builder.build()).build();
