@@ -64,4 +64,11 @@ public abstract class AbstractProcessingStep implements BaseProcessor.Processing
         });
     }
 
+    protected void tryWriteSources(List<TypeSpec.Builder> builders, String rootPackage) throws IOException {
+        for (TypeSpec.Builder builder : builders) {
+            JavaFile javaFile = JavaFile.builder(rootPackage, builder.build()).build();
+            tryWriteSource(javaFile);
+        }
+    }
+
 }
