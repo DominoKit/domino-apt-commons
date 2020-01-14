@@ -1,6 +1,5 @@
 package org.dominokit.domino.apt.commons;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
 import javax.annotation.processing.Filer;
@@ -12,7 +11,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
-import javax.lang.model.util.SimpleTypeVisitor8;
 import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -121,6 +119,33 @@ public class ProcessorUtil {
 
     public boolean isAssignableFrom(TypeMirror element, Class<?> targetClass) {
         return types.isAssignable(element, types.getDeclaredType(elements.getTypeElement(targetClass.getCanonicalName())));
+    }
+
+    public <A extends Annotation> A findClassAnnotation(Element classElement, Class<A> annotation){
+        A result = classElement.getAnnotation(annotation);
+        if(nonNull(result)){
+            return result;
+        }
+        TypeMirror superclass = ((TypeElement) classElement).getSuperclass();
+        if (superclass.getKind().equals(TypeKind.NONE)) {
+            return null;
+        } else {
+            return findClassAnnotation(types.asElement(superclass), annotation);
+        }
+    }
+
+
+    public Optional<TypeMirror> findClassValueFromClassAnnotation(Element classElement, Class<? extends Annotation> annotation, String paramName){
+        Optional<TypeMirror> result = getClassValueFromAnnotation(classElement, annotation, paramName);
+        if(result.isPresent()){
+            return result;
+        }
+        TypeMirror superclass = ((TypeElement) classElement).getSuperclass();
+        if (superclass.getKind().equals(TypeKind.NONE)) {
+            return Optional.empty();
+        } else {
+            return findClassValueFromClassAnnotation(types.asElement(superclass), annotation,paramName);
+        }
     }
 
     public Optional<TypeMirror> getClassValueFromAnnotation(Element element, Class<? extends Annotation> annotation, String paramName) {
