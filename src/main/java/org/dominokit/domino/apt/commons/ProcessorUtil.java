@@ -30,7 +30,7 @@ public class ProcessorUtil {
     protected final Elements elements;
     protected final ProcessingEnvironment processingEnv;
 
-    protected ProcessorUtil(ProcessingEnvironment processingEnv) {
+    public ProcessorUtil(ProcessingEnvironment processingEnv) {
         this.messager = processingEnv.getMessager();
         this.filer = processingEnv.getFiler();
         this.types = processingEnv.getTypeUtils();
