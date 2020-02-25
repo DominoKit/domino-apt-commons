@@ -38,6 +38,18 @@ public class ProcessorUtil {
         this.processingEnv = processingEnv;
     }
 
+    public Messager getMessager() {
+        return messager;
+    }
+
+    public Types getTypes() {
+        return types;
+    }
+
+    public Elements getElements() {
+        return elements;
+    }
+
     public List<Element> getAnnotatedMethods(TypeMirror beanType, Class<? extends Annotation> annotation) {
         return getAnnotatedElements(beanType, annotation, element -> ElementKind.METHOD.equals(element.getKind()));
     }
