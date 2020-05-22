@@ -1,6 +1,5 @@
 name: Deploy
 
-# Run workflow on commits to the `master` branch
 on:
   push:
     branches: [ master ]
