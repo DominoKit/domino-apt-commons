@@ -133,9 +133,9 @@ public class ProcessorUtil {
         return types.isAssignable(element, types.getDeclaredType(elements.getTypeElement(targetClass.getCanonicalName())));
     }
 
-    public <A extends Annotation> A findClassAnnotation(Element classElement, Class<A> annotation){
+    public <A extends Annotation> A findClassAnnotation(Element classElement, Class<A> annotation) {
         A result = classElement.getAnnotation(annotation);
-        if(nonNull(result)){
+        if (nonNull(result)) {
             return result;
         }
         TypeMirror superclass = ((TypeElement) classElement).getSuperclass();
@@ -147,16 +147,16 @@ public class ProcessorUtil {
     }
 
 
-    public Optional<TypeMirror> findClassValueFromClassAnnotation(Element classElement, Class<? extends Annotation> annotation, String paramName){
+    public Optional<TypeMirror> findClassValueFromClassAnnotation(Element classElement, Class<? extends Annotation> annotation, String paramName) {
         Optional<TypeMirror> result = getClassValueFromAnnotation(classElement, annotation, paramName);
-        if(result.isPresent()){
+        if (result.isPresent()) {
             return result;
         }
         TypeMirror superclass = ((TypeElement) classElement).getSuperclass();
         if (superclass.getKind().equals(TypeKind.NONE)) {
             return Optional.empty();
         } else {
-            return findClassValueFromClassAnnotation(types.asElement(superclass), annotation,paramName);
+            return findClassValueFromClassAnnotation(types.asElement(superclass), annotation, paramName);
         }
     }
 
