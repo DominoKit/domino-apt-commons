@@ -15,6 +15,9 @@
         </license>
     </licenses>
 
+    <url>https://github.com/DominoKit/domino-apt-commons</url>
+    <description>Set of utility classes for annotation processing</description>
+
     <developers>
         <developer>
             <name>Ahmad K. Bawaneh</name>
@@ -136,7 +139,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
+                    <version>3.2.0</version>
                     <configuration>
                         <failOnError>false</failOnError>
                     </configuration>
