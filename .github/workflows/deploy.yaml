@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ b-1.0-rc4 ]
 
 jobs:
   release:
