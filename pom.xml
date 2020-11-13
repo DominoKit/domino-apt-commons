@@ -192,28 +192,25 @@
                     <artifactId>gitflow-maven-plugin</artifactId>
                     <version>1.14.0</version>
                     <configuration>
-                        <configuration>
+                        <!-- Set to true to immediately bump the development version when creating a release branch -->
+                        <commitDevelopmentVersionAtStart>true</commitDevelopmentVersionAtStart>
 
-                            <!-- Set to true to immediately bump the development version when creating a release branch -->
-                            <commitDevelopmentVersionAtStart>true</commitDevelopmentVersionAtStart>
+                        <!-- Which digit to increas in major.minor.patch versioning, the values being 0.1.2 respectively.
+                             By default the rightmost number is increased.
+                             Pass in the number via parameter or profile to allow configuration,
+                             since everything set in the file can't be overwritten via command line -->
+                        <versionDigitToIncrement>${version.digit.patch}</versionDigitToIncrement>
 
-                            <!-- Which digit to increas in major.minor.patch versioning, the values being 0.1.2 respectively.
-                                 By default the rightmost number is increased.
-                                 Pass in the number via parameter or profile to allow configuration,
-                                 since everything set in the file can't be overwritten via command line -->
-                            <versionDigitToIncrement>${version.digit.patch}</versionDigitToIncrement>
+                        <!-- Execute mvn verify before release -->
+                        <preReleaseGoals>verify</preReleaseGoals>
+                        <preHotfixGoals>verify</preHotfixGoals>
 
-                            <!-- Execute mvn verify before release -->
-                            <preReleaseGoals>verify</preReleaseGoals>
-                            <preHotfixGoals>verify</preHotfixGoals>
-
-                            <!-- Configure branches -->
-                            <gitFlowConfig>
-                                <productionBranch>master</productionBranch>
-                                <!-- default is develop, but we use development -->
-                                <developmentBranch>develop</developmentBranch>
-                            </gitFlowConfig>
-                        </configuration>
+                        <!-- Configure branches -->
+                        <gitFlowConfig>
+                            <productionBranch>master</productionBranch>
+                            <!-- default is develop, but we use development -->
+                            <developmentBranch>develop</developmentBranch>
+                        </gitFlowConfig>
                     </configuration>
                 </plugin>
             </plugins>
@@ -234,6 +231,10 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>

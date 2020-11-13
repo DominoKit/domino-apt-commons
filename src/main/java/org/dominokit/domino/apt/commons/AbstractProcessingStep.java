@@ -26,6 +26,9 @@ import javax.lang.model.util.Types;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A parent class for every {@link org.dominokit.domino.apt.commons.BaseProcessor.ProcessingStep}
+ */
 public abstract class AbstractProcessingStep implements BaseProcessor.ProcessingStep {
 
     protected final Messager messager;
@@ -44,6 +47,11 @@ public abstract class AbstractProcessingStep implements BaseProcessor.Processing
         this.processorUtil = new ProcessorUtil(processingEnv);
     }
 
+    /**
+     * Writes the source file to the {@link Filer}
+     *
+     * @param sourceFile the source file to write
+     */
     protected void writeSource(JavaFile sourceFile) {
         try {
             sourceFile.writeTo(filer);
@@ -52,11 +60,22 @@ public abstract class AbstractProcessingStep implements BaseProcessor.Processing
         }
     }
 
-
+    /**
+     * Writes the source file to the {@link Filer}
+     *
+     * @param sourceFile the source file to write
+     * @throws IOException if something went wrong
+     */
     protected void tryWriteSource(JavaFile sourceFile) throws IOException {
         sourceFile.writeTo(filer);
     }
 
+    /**
+     * Writes a list of type specs in a specific package.
+     *
+     * @param builders    a list of type specs to write
+     * @param rootPackage the package to write to
+     */
     protected void writeSource(List<TypeSpec.Builder> builders, String rootPackage) {
         builders.forEach(builder -> {
             JavaFile javaFile = JavaFile.builder(rootPackage, builder.build()).build();
@@ -64,6 +83,13 @@ public abstract class AbstractProcessingStep implements BaseProcessor.Processing
         });
     }
 
+    /**
+     * Writes a list of type specs in a specific package.
+     *
+     * @param builders    a list of type specs to write
+     * @param rootPackage the package to write to
+     * @throws IOException if something went wrong
+     */
     protected void tryWriteSources(List<TypeSpec.Builder> builders, String rootPackage) throws IOException {
         for (TypeSpec.Builder builder : builders) {
             JavaFile javaFile = JavaFile.builder(rootPackage, builder.build()).build();

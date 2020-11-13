@@ -2,6 +2,9 @@ package org.dominokit.domino.apt.commons;
 
 import javax.lang.model.element.Element;
 
+/**
+ * Unchecked exception thrown when processing has soemthing wrong
+ */
 public class ProcessingException extends RuntimeException {
 
     private final transient Element element;

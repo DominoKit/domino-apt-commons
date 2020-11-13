@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 
+/**
+ * A base processor that provides a list of helper methods
+ */
 public abstract class BaseProcessor extends AbstractProcessor {
 
     protected Types typeUtils;
@@ -26,40 +29,89 @@ public abstract class BaseProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        this.typeUtils=processingEnv.getTypeUtils();
-        this.elementUtils=processingEnv.getElementUtils();
-        this.filer=processingEnv.getFiler();
-        this.messager=processingEnv.getMessager();
-        this.elementFactory=new ElementFactory(elementUtils, typeUtils);
+        this.typeUtils = processingEnv.getTypeUtils();
+        this.elementUtils = processingEnv.getElementUtils();
+        this.filer = processingEnv.getFiler();
+        this.messager = processingEnv.getMessager();
+        this.elementFactory = new ElementFactory(elementUtils, typeUtils);
     }
 
-    protected Writer obtainSourceWriter(String targetPackage,String className) throws IOException {
+    /**
+     * Creates a {@link Writer} to a class with a specific package and name
+     *
+     * @param targetPackage the package to write to
+     * @param className     the class name
+     * @return the writer
+     * @throws IOException if the writer cannot be created
+     */
+    protected Writer obtainSourceWriter(String targetPackage, String className) throws IOException {
         return createSourceFile(targetPackage, className).openWriter();
     }
 
+    /**
+     * Creates a source file to a class with a specific package and name
+     *
+     * @param targetPackage the package to write to
+     * @param className     the class name
+     * @return the source file as a {@link JavaFileObject}
+     * @throws IOException if the writer cannot be created
+     */
     protected JavaFileObject createSourceFile(String targetPackage, String className) throws IOException {
         return filer.createSourceFile(targetPackage + "." + className);
     }
 
-    protected Writer obtainResourceWriter(String targetPackage,String className) throws IOException {
-        return createResourceFile(targetPackage, className).openWriter();
+    /**
+     * Creates a {@link Writer} to a resource with a specific package and name
+     *
+     * @param targetPackage the package to write to
+     * @param resourceName  the resource name
+     * @return the writer
+     * @throws IOException if the writer cannot be created
+     */
+    protected Writer obtainResourceWriter(String targetPackage, String resourceName) throws IOException {
+        return createResourceFile(targetPackage, resourceName).openWriter();
     }
 
-    protected FileObject createResourceFile(String targetPackage, String className) throws IOException {
-        return filer.createResource(StandardLocation.SOURCE_OUTPUT, targetPackage, className);
+    /**
+     * Creates a resource file to a resource with a specific package and name
+     *
+     * @param targetPackage the package to write to
+     * @param resourceName  the resource name
+     * @return the resource file as a {@link FileObject}
+     * @throws IOException if the writer cannot be created
+     */
+    protected FileObject createResourceFile(String targetPackage, String resourceName) throws IOException {
+        return filer.createResource(StandardLocation.SOURCE_OUTPUT, targetPackage, resourceName);
     }
 
+    /**
+     * Checks if an element is of a specific {@link ElementKind}
+     *
+     * @param element the element
+     * @param kind    the kind
+     * @return {@code true} if the element is of the kind, throws exception otherwise
+     * @throws ProcessingException if the element is not of the kind
+     */
     protected boolean validateElementKind(Element element, ElementKind kind) {
         if (element.getKind() != kind)
-            throw new ProcessingException(element, "Only "+kind+" can be annotated with @%s");
+            throw new ProcessingException(element, "Only " + kind + " can be annotated with @%s");
         return true;
     }
 
-    protected ProcessorElement newProcessorElement(Element element){
+    /**
+     * Creates a new {@link ProcessorElement} for a specific element
+     *
+     * @param element the element
+     * @return a new processor element
+     */
+    protected ProcessorElement newProcessorElement(Element element) {
         return new ProcessorElement(element, elementUtils, typeUtils, messager);
     }
 
-    public class ElementFactory{
+    /**
+     * Factory class for {@link ProcessorElement}
+     */
+    public class ElementFactory {
 
         private final Elements elementUtils;
         private final Types typeUtils;
@@ -69,13 +121,22 @@ public abstract class BaseProcessor extends AbstractProcessor {
             this.typeUtils = typeUtils;
         }
 
-        public ProcessorElement make(Element element){
+        public ProcessorElement make(Element element) {
             return new ProcessorElement(element, this.elementUtils, this.typeUtils, messager);
         }
     }
 
+    /**
+     * A step in the process of generation
+     */
+    @FunctionalInterface
     public interface ProcessingStep {
 
+        /**
+         * Process the step passing all the elements annotated with the supported annotation
+         *
+         * @param elementsByAnnotation the elements annotated with the supported annotation
+         */
         void process(Set<? extends Element> elementsByAnnotation);
     }
 }

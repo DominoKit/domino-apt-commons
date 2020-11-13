@@ -10,9 +10,8 @@ import java.io.StringWriter;
 public class ExceptionUtil {
 
     /**
-     *
      * @param messager the messager to print the exception stack trace
-     * @param e exception to be printed
+     * @param e        exception to be printed
      */
     public static void messageStackTrace(Messager messager, Exception e) {
         StringWriter out = new StringWriter();
@@ -21,10 +20,9 @@ public class ExceptionUtil {
     }
 
     /**
-     *
      * @param messager the messager to print the exception stack trace
-     * @param e exception to be printed
-     * @param element the element producing the error
+     * @param e        exception to be printed
+     * @param element  the element producing the error
      */
     public static void messageStackTrace(Messager messager, Exception e, Element element) {
         StringWriter out = new StringWriter();
@@ -33,10 +31,9 @@ public class ExceptionUtil {
     }
 
     /**
-     *
-     * @param messager the messager to print the exception stack trace
-     * @param e exception to be printed
-     * @param element the element producing the error
+     * @param messager         the messager to print the exception stack trace
+     * @param e                exception to be printed
+     * @param element          the element producing the error
      * @param annotationMirror the annotation producing the error
      */
     public static void messageStackTrace(Messager messager, Exception e, Element element, AnnotationMirror annotationMirror) {

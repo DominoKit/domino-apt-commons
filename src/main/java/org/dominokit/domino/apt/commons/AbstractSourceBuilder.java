@@ -6,7 +6,10 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-public abstract class AbstractSourceBuilder implements SourceBuilder{
+/**
+ * Abstract class for source builders that has all necessary helper classes
+ */
+public abstract class AbstractSourceBuilder implements SourceBuilder {
 
     protected final Messager messager;
     protected final Filer filer;
