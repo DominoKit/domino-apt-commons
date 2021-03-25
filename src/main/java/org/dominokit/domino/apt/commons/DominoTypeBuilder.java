@@ -15,9 +15,8 @@
  */
 package org.dominokit.domino.apt.commons;
 
-import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeSpec;
+
 import javax.annotation.processing.Processor;
 import javax.lang.model.element.Modifier;
 
@@ -34,9 +33,8 @@ public class DominoTypeBuilder {
   public static TypeSpec.Builder classBuilder(
       String name, Class<? extends Processor> processorClass) {
     return TypeSpec.classBuilder(name)
-        .addAnnotation(generatedAnnotation(processorClass))
         .addModifiers(Modifier.PUBLIC)
-        .addJavadoc("This is generated class, please don't modify\n");
+        .addJavadoc("This is a generated class, please don't modify\n");
   }
 
   /**
@@ -49,9 +47,8 @@ public class DominoTypeBuilder {
   public static TypeSpec.Builder interfaceBuilder(
       String name, Class<? extends Processor> processorClass) {
     return TypeSpec.interfaceBuilder(name)
-        .addAnnotation(generatedAnnotation(processorClass))
         .addModifiers(Modifier.PUBLIC)
-        .addJavadoc("This is generated class, please don't modify\n");
+        .addJavadoc("This is a generated class, please don't modify\n");
   }
 
   /**
@@ -64,29 +61,7 @@ public class DominoTypeBuilder {
   public static TypeSpec.Builder enumBuilder(
       String name, Class<? extends Processor> processorClass) {
     return TypeSpec.enumBuilder(name)
-        .addAnnotation(generatedAnnotation(processorClass))
         .addModifiers(Modifier.PUBLIC)
-        .addJavadoc("This is generated class, please don't modify\n");
-  }
-
-  private static AnnotationSpec generatedAnnotation(Class<? extends Processor> processorClass) {
-    switch (CurrentSourceVersion.get()) {
-      case RELEASE_0:
-      case RELEASE_1:
-      case RELEASE_2:
-      case RELEASE_3:
-      case RELEASE_4:
-      case RELEASE_5:
-      case RELEASE_6:
-      case RELEASE_7:
-      case RELEASE_8:
-        return AnnotationSpec.builder(ClassName.get("javax.annotation", "Generated"))
-            .addMember("value", "\"" + processorClass.getCanonicalName() + "\"")
-            .build();
-      default:
-        return AnnotationSpec.builder(ClassName.get("javax.annotation.processing", "Generated"))
-            .addMember("value", "\"" + processorClass.getCanonicalName() + "\"")
-            .build();
-    }
+        .addJavadoc("This is a generated class, please don't modify\n");
   }
 }
