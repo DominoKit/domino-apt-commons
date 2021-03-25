@@ -16,8 +16,8 @@
 package org.dominokit.domino.apt.commons;
 
 import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeSpec;
-import javax.annotation.Generated;
 import javax.annotation.processing.Processor;
 import javax.lang.model.element.Modifier;
 
@@ -70,8 +70,23 @@ public class DominoTypeBuilder {
   }
 
   private static AnnotationSpec generatedAnnotation(Class<? extends Processor> processorClass) {
-    return AnnotationSpec.builder(Generated.class)
-        .addMember("value", "\"" + processorClass.getCanonicalName() + "\"")
-        .build();
+    switch (CurrentSourceVersion.get()) {
+      case RELEASE_0:
+      case RELEASE_1:
+      case RELEASE_2:
+      case RELEASE_3:
+      case RELEASE_4:
+      case RELEASE_5:
+      case RELEASE_6:
+      case RELEASE_7:
+      case RELEASE_8:
+        return AnnotationSpec.builder(ClassName.get("javax.annotation", "Generated"))
+            .addMember("value", "\"" + processorClass.getCanonicalName() + "\"")
+            .build();
+      default:
+        return AnnotationSpec.builder(ClassName.get("javax.annotation.processing", "Generated"))
+            .addMember("value", "\"" + processorClass.getCanonicalName() + "\"")
+            .build();
+    }
   }
 }

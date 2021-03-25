@@ -47,6 +47,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
     this.filer = processingEnv.getFiler();
     this.messager = processingEnv.getMessager();
     this.elementFactory = new ElementFactory(elementUtils, typeUtils);
+    CurrentSourceVersion.set(processingEnv.getSourceVersion());
   }
 
   /**
