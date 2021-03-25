@@ -36,6 +36,7 @@ jobs:
       - run: mvn verify
 
   release:
+    needs: verify
     runs-on: ubuntu-18.04
     steps:
       - name: Check out Git repository
