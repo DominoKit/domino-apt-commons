@@ -16,7 +16,6 @@
 package org.dominokit.domino.apt.commons;
 
 import com.squareup.javapoet.TypeSpec;
-
 import javax.annotation.processing.Processor;
 import javax.lang.model.element.Modifier;
 
