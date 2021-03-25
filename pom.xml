@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dominokit</groupId>
     <artifactId>domino-apt-commons</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>HEAD-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>domino-apt-commons</name>
@@ -59,8 +59,10 @@
     </distributionManagement>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <snapshot.version>HEAD-SNAPSHOT</snapshot.version>
+        <next.release.version>1.0.1</next.release.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -187,14 +189,16 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.amashchenko.maven.plugin</groupId>
+                <groupId>org.dominokit</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
-                <version>1.14.0</version>
+                <version>1.0.0</version>
                 <configuration>
+                    <snapshotVersionProperty>snapshot.version</snapshotVersionProperty>
+                    <releaseVersionProperty>next.release.version</releaseVersionProperty>
                     <!-- Set to true to immediately bump the development version when creating a release branch -->
                     <commitDevelopmentVersionAtStart>true</commitDevelopmentVersionAtStart>
 
-                    <!-- Which digit to increase in major.minor.patch versioning, the values being 0.1.2 respectively.
+                    <!-- Which digit to increas in major.minor.patch versioning, the values being 0.1.2 respectively.
                          By default the rightmost number is increased.
                          Pass in the number via parameter or profile to allow configuration,
                          since everything set in the file can't be overwritten via command line -->
