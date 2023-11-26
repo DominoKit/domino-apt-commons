@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dominokit</groupId>
     <artifactId>domino-apt-commons</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
 
     <name>domino-apt-commons</name>
@@ -60,13 +60,13 @@
 
     <properties>
         <snapshot.version>HEAD-SNAPSHOT</snapshot.version>
-        <next.release.version>1.0.3</next.release.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <next.release.version>1.0.4</next.release.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
+        <maven.compiler.plugin>3.11.0</maven.compiler.plugin>
         <maven.source.plugin>3.0.1</maven.source.plugin>
         <maven.javadoc.plugin>2.10.4</maven.javadoc.plugin>
         <maven.gpg.plugin>1.6</maven.gpg.plugin>
@@ -76,12 +76,12 @@
         <maven.install.plugin>3.0.0-M1</maven.install.plugin>
         <maven.license.plugin>3.0</maven.license.plugin>
         <maven.surfire.plugin>3.0.0-M1</maven.surfire.plugin>
-        <maven.gwt.plugin>1.0.0</maven.gwt.plugin>
-        <elemental2.version>1.1.0</elemental2.version>
+        <maven.gwt.plugin>1.1.0</maven.gwt.plugin>
+        <elemental2.version>1.2.1</elemental2.version>
 
-        <auto.service.version>1.0-rc7</auto.service.version>
+        <auto.service.version>1.1.1</auto.service.version>
         <javapoet.version>1.13.0</javapoet.version>
-        <junit.version>4.13.1</junit.version>
+        <junit.version>4.13.2</junit.version>
         <assertj.version>3.18.1</assertj.version>
         <slf4j.version>1.7.30</slf4j.version>
 
@@ -119,19 +119,66 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.8.0</version>
+            <version>2.14.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.11</version>
+            <version>3.13.0</version>
         </dependency>
 
     </dependencies>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>32.0.1-jre</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin}</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.source.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.plugin}</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.coveo</groupId>
                 <artifactId>fmt-maven-plugin</artifactId>
@@ -166,6 +213,7 @@
                         <exclude>**/pom.xml</exclude>
                         <exclude>**/.flattened-pom.xml</exclude>
                         <exclude>**/gwt-unitcache</exclude>
+                        <exclude>**/.mvn/*.*</exclude>
                     </excludes>
                     <properties>
                         <year>${project.inceptionYear}</year>
@@ -216,47 +264,37 @@
                     </gitFlowConfig>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <configuration>
+                    <!--Only required due to a GWT DateTimeFormat issue see https://github.com/gwtproject/gwt/issues/8259-->
+                    <argLine>-Duser.timezone=UTC</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence/>
+                            </rules>
+                        </configuration>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin}</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven.source.plugin}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${maven.javadoc.plugin}</version>
-                    <configuration>
-                        <failOnError>false</failOnError>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -289,37 +327,29 @@
                         <autoReleaseAfterClose>false</autoReleaseAfterClose>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>net.ltgt.gwt.maven</groupId>
+                    <artifactId>gwt-maven-plugin</artifactId>
+                    <version>1.1.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <!--Only required due to a GWT DateTimeFormat issue see https://github.com/gwtproject/gwt/issues/8259-->
+                        <argLine>-Duser.timezone=UTC</argLine>
+                        <sourceLevel>1.8</sourceLevel>
+                        <failOnError>true</failOnError>
+                        <useCompilerArgsForTests>true</useCompilerArgsForTests>
+                        <codeserverArgs>
+                            <arg>-generateJsInteropExports</arg>
+                        </codeserverArgs>
+                        <compilerArgs>
+                            <compilerArg>-generateJsInteropExports</compilerArg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
-
     <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.coveo</groupId>
-                        <artifactId>fmt-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.mycila</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>production</id>
             <activation>
@@ -330,22 +360,6 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.coveo</groupId>
-                        <artifactId>fmt-maven-plugin</artifactId>
-                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
